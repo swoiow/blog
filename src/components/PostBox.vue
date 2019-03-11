@@ -18,6 +18,9 @@
     >
       <v-flex>
         <h1 class="mb-1">
+          <strong v-if="post.status===0">
+            [草稿]
+          </strong>
           {{ post.title }}
         </h1>
         <div id="tagline">
@@ -43,8 +46,8 @@ export default {
       is_md: null,
       post: {
         title: "I'm a Title",
-        tag: ['tag1', 'tag2'],
-        content: 'This is content'
+        tag: ['tag'],
+        content: 'This is content.'
       }
     }
   },
@@ -62,12 +65,13 @@ export default {
       vm.$http.get(vm.$gc.H + '/api/post/' + vm.$route.params.post_id)
         .then(function (response) {
           vm.$data.post = response.data
-          vm.$data.is_md = response.data.type === 'Markdown' && true || false
+          vm.$data.is_md = response.data.type === 'Markdown'
         })
         .catch(function (err) {
+          console.log(err.stack)
           let fake = {
-            title: err.message,
-            content: err.stack
+            title: '资源未找到，或处于草稿状态',
+            content: 'Status Code: ' + err.response.status
           }
 
           vm.$data.post = fake
@@ -75,7 +79,7 @@ export default {
         .then(function () {
           if (vm.$data.is_md) {
             console.log('render as markdown')
-            !('marked' in window) && vm.loadMarkDownJS() || vm.renderMarkDown()
+            !('marked' in window) ? vm.loadMarkDownJS() : vm.renderMarkDown()
           } else {
             console.log('render as normal html')
           }
@@ -104,7 +108,8 @@ export default {
 
     renderMarkDown: function () {
       let vm = this
-      vm.$data.post.content = marked(vm.$data.post.content)
+      // eslint-disable-next-line
+        vm.$data.post.content = marked(vm.$data.post.content)
     }
   }
 }
