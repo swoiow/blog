@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+BROKER_URL = "redis://127.0.0.1:6379/10"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/11"
+CELERY_TASK_SERIALIZER = "msgpack"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json", "msgpack"]
+
+CELERY_TIMEZONE = "Asia/Shanghai"
+CELERY_ENABLE_UTC = False
+
+CELERY_TASK_RESULT_EXPIRES = 3600
+CELERYD_FORCE_EXECV = True
+CELERYD_MAX_TASKS_PER_CHILD = 20
+CELERY_DEFAULT_RATE_LIMIT = "250/m"
+# CELERYD_LOG_FILE = "log/celery/%n.log"
+# CELERYD_PID_FILE = "run/celery/%n.pid"

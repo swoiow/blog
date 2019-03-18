@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 模块管理 </title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="description" content="description">
+    <meta name="keywords" content="keywords">
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+</head>
+
+<body>
+{% if auth %}
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                {% for th in ["#", "模块名", "描述", "操作"] %}
+                    <th scope="col">{{ th }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for k, o in mods.items()|sort %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ k }}</td>
+                    <td>{{ o.description }}</td>
+                    <td>
+                        {% if o.enable %}
+                            <button id="mod-u" class="btn btn-outline-danger btn-sm mod" data-mod="{{ k }}">卸载
+                            </button>
+                        {% else %}
+                            <button id="mod-i" class="btn btn-outline-primary btn-sm mod" data-mod="{{ k }}">安装
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+<div id="foo" style="display: flex; justify-content: center;">&copy; Copyright 2017 <a href="/"></a></div>
+
+<div id="js" hidden>
+    <script src="https://unpkg.com/jquery@2.2.4/dist/jquery.min.js"
+            integrity="sha384-rY/jv8mMhqDabXSo+UCggqKtdmBfd3qC2/KvyTDNQ6PcUJXaxK1tMepoQda4g5vB"
+            crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+    {% if auth %}
+        <script type="text/javascript">
+        function CtrlMod(mod, ac) {
+            var url = (ac === "i") && "./install" || "./uninstall";
+            $.ajax({
+                context: this,
+                type: "GET",
+                url: url,
+                data: {"name": mod}
+            }).done(function (data, status, xhr) {
+                alert(data.details);
+                location.reload();
+            }).fail(function (data, status, xhr) {
+                alert(status);
+                location.reload()
+            })
+        }
+
+        $("button.mod").bind("click", function () {
+            var mod = $(this).attr("data-mod");
+            var ac = $(this).attr('id') === "mod-i" && "i" || "u";
+            CtrlMod(mod, ac);
+        });
+    {% endif %}
+    </script>
+</div>
+
+</body>
+</html>
