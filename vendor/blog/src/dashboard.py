@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from celorm.utils import to_dict_with_qy
+from celorm.utils import DictMixin
 
 from handlers import BaseHandler
 from lib.cache import Tache
@@ -84,7 +84,6 @@ class AuthQuery(_Query):
         self.finish(r)
 
     def _change_password(self, oPwd, nPwd):
-        print(oPwd, nPwd)
         db = getattr(self, "db")
 
         u = db.query(User).filter(User._id == self.session.user_id).first()
@@ -112,7 +111,7 @@ class AuthQuery(_Query):
 
         count = sql.count()
         sql = sql.offset(offset).limit(limit)
-        r = to_dict_with_qy(sql)
+        r = DictMixin.query_to_dict(sql)
         return dict(total=count, limit=limit, result=list(r))
 
     @login_required
@@ -128,7 +127,7 @@ class AuthQuery(_Query):
 
         count = sql.count()
         sql = sql.offset(offset).limit(limit)
-        r = to_dict_with_qy(sql)
+        r = DictMixin.query_to_dict(sql)
         return dict(total=count, limit=limit, result=list(r))
 
     mapping = (

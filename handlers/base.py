@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import datetime as dt
-import json as js
 import traceback
 
+import orjson as js
 import tornado.gen
 import tornado.web
 
@@ -151,10 +151,12 @@ class BaseHandler(BaseRequest):
 
         ret = js.dumps(
             data,
-            sort_keys=True,
-            ensure_ascii=False,
+            # sort_keys=True,
+            # ensure_ascii=False,
             # indent=2,
-            default=lambda o: o.isoformat() if isinstance(o, (dt.date, dt.datetime)) else o,
+            # default=lambda o: o.isoformat() if isinstance(o, (dt.date, dt.datetime)) else o,
         )
+        if not isinstance(ret, str):
+            ret = ret.decode()
 
         return ret  # 不能够直接write，因为其他函数可能调用

@@ -2,8 +2,9 @@ bleach
 redis
 lxml
 six
-tornado==6.0.1
+tornado<=6
 SQLAlchemy
 fakeredis
+orjson
 https://github.com/zhihu/tache/archive/master.zip
 -r myreqs.txt
